@@ -14,10 +14,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    QString geoTag(double, double);
 
 public slots:
     void proceed(bool);
-
+    void digit2Degs(double, double*, double*, double*);
 
     
 private:
