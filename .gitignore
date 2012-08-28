@@ -1,0 +1,7 @@
+*.o
+degree.pro
+moc_*.cpp
+ui_*.h
+degree
+degree.pro.user
+Makefile
