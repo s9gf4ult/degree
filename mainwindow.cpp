@@ -57,5 +57,5 @@ QString MainWindow::geoTag(double a, double b)
     QString aa = QString("%1 %2 %3").arg(deg).arg(min).arg(sec);
     this->digit2Degs(b, &deg, &min, &sec);
     QString bb = QString("%1 %2 %3").arg(deg).arg(min).arg(sec);
-    return QString("<geo>%1 N %2 E</geo>").arg(aa).arg(bb);
+    return QString("<geo>%1 %2 %3 %4</geo>").arg(aa).arg(ui->north->isChecked() ? "N" : "S").arg(bb).arg(ui->east->isChecked() ? "E" : "W");
 }
