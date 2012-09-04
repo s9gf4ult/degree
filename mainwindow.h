@@ -15,6 +15,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     QString geoTag(double, double);
+    QString makeLink(double, double);
 
 public slots:
     void proceed(bool);

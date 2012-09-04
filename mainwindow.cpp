@@ -32,6 +32,7 @@ void MainWindow::proceed(bool ignore) {
         doubles.append(ret);
     };
     ui->output->setText(this->geoTag(doubles[1], doubles[0]));
+    ui->link->setText(this->makeLink(doubles[1], doubles[0]));
 
 }
 
@@ -58,4 +59,21 @@ QString MainWindow::geoTag(double a, double b)
     this->digit2Degs(b, &deg, &min, &sec);
     QString bb = QString("%1 %2 %3").arg(deg).arg(min).arg(sec);
     return QString("<geo>%1 %2 %3 %4</geo>").arg(aa).arg(ui->north->isChecked() ? "N" : "S").arg(bb).arg(ui->east->isChecked() ? "E" : "W");
+}
+
+QString MainWindow::makeLink(double lat, double lon)
+{
+    double latdeg, latmin, latsec;
+    double londeg, lonmin, lonsec;
+    this->digit2Degs(lat, &latdeg, &latmin, &latsec);
+    this->digit2Degs(lon, &londeg, &lonmin, &lonsec);
+    return QString("Special:Geo?subaction=near&dist=0.5&latdeg=%1&latmin=%2&latsec=%3&latns=%4&londeg=%5&lonmin=%6&lonsec=%7&lonew=%8")
+            .arg(latdeg)
+            .arg(latmin)
+            .arg(latsec)
+            .arg(ui->north->isChecked() ? "N" : "S")
+            .arg(londeg)
+            .arg(lonmin)
+            .arg(lonsec)
+            .arg(ui->west->isChecked() ? "W" : "E");
 }
