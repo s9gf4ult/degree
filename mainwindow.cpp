@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QObject::connect(ui->go, SIGNAL(clicked(bool)), this, SLOT(proceed(bool)));
+     QObject::connect(ui->convert, SIGNAL(toggled(bool)), this, SLOT(proceed(bool)));
 }
 
 void MainWindow::proceed(bool ignore) {
@@ -32,7 +32,7 @@ void MainWindow::proceed(bool ignore) {
         doubles.append(ret);
     };
     ui->output->setText(this->geoTag(doubles[1], doubles[0]));
-    ui->link->setText(this->makeLink(doubles[1], doubles[0]));
+    ui->link->setPlainText(this->makeLink(doubles[1], doubles[0]));
 
 }
 
@@ -63,11 +63,15 @@ QString MainWindow::geoTag(double a, double b)
 
 QString MainWindow::makeLink(double lat, double lon)
 {
+    QString name = this->ui->name->text();
+    if (name.isEmpty()) {
+        return "WTF?? Need article name to fill this correctly";
+    }
     double latdeg, latmin, latsec;
     double londeg, lonmin, lonsec;
     this->digit2Degs(lat, &latdeg, &latmin, &latsec);
     this->digit2Degs(lon, &londeg, &lonmin, &lonsec);
-    return QString("Special:Geo?subaction=near&dist=0.5&latdeg=%1&latmin=%2&latsec=%3&latns=%4&londeg=%5&lonmin=%6&lonsec=%7&lonew=%8")
+    return QString("Special:Geo?subaction=near&dist=0.5&latdeg=%1&latmin=%2&latsec=%3&latns=%4&londeg=%5&lonmin=%6&lonsec=%7&lonew=%8&ignore=%9")
             .arg(latdeg)
             .arg(latmin)
             .arg(latsec)
@@ -75,5 +79,6 @@ QString MainWindow::makeLink(double lat, double lon)
             .arg(londeg)
             .arg(lonmin)
             .arg(lonsec)
-            .arg(ui->west->isChecked() ? "W" : "E");
+            .arg(ui->west->isChecked() ? "W" : "E")
+            .arg(name);
 }
