@@ -18,7 +18,7 @@ void MainWindow::proceed(bool ignore) {
         cleared.append(a.replace(QRegExp("^\\ *"), "").replace(QRegExp("\\ *$"), ""));
     }
     if (cleared.length() != 2) {
-        ui->output->setText("WTF ??? need 2 comma separeted digits");
+        ui->link->setPlainText("WTF ??? need 2 comma separeted digits");
         return;
     }
     QVector<double> doubles;
@@ -26,13 +26,15 @@ void MainWindow::proceed(bool ignore) {
         bool good = true;
         double ret = a.toDouble(&good);
         if (!good) {
-            ui->output->setText(QString("Could not convert \"%1\" to double value").arg(a));
+            ui->link->setPlainText(QString("Could not convert \"%1\" to double value").arg(a));
             return;
         }
         doubles.append(ret);
     };
-    ui->output->setText(this->geoTag(doubles[1], doubles[0]));
-    ui->link->setPlainText(this->makeLink(doubles[1], doubles[0]));
+    ui->link->clear();
+    ui->link->insertPlainText(this->geoTag(doubles[1], doubles[0]));
+    ui->link->insertPlainText("\n");
+    ui->link->insertPlainText(this->makeLink(doubles[1], doubles[0]));
 
 }
 
@@ -67,11 +69,16 @@ QString MainWindow::makeLink(double lat, double lon)
     if (name.isEmpty()) {
         return "WTF?? Need article name to fill this correctly";
     }
+    QString url = this->ui->siteurl->text();
+    if (url.isEmpty()) {
+        return "Site URL must not be empty";
+    }
     double latdeg, latmin, latsec;
     double londeg, lonmin, lonsec;
     this->digit2Degs(lat, &latdeg, &latmin, &latsec);
     this->digit2Degs(lon, &londeg, &lonmin, &lonsec);
-    return QString("Special:Geo?subaction=near&dist=0.5&latdeg=%1&latmin=%2&latsec=%3&latns=%4&londeg=%5&lonmin=%6&lonsec=%7&lonew=%8&ignore=%9")
+    QString link = QString("%1/Special:Geo?subaction=near&dist=0.5&latdeg=%2&latmin=%3&latsec=%4&latns=%5&londeg=%6&lonmin=%7&lonsec=%8&lonew=%9&ignore=%10")
+            .arg(url)
             .arg(latdeg)
             .arg(latmin)
             .arg(latsec)
@@ -81,4 +88,8 @@ QString MainWindow::makeLink(double lat, double lon)
             .arg(lonsec)
             .arg(ui->west->isChecked() ? "W" : "E")
             .arg(name);
+    return QString::fromUtf8("<sidebar>\n* Что рядом\n** %1 | Смотреть\n</sidebar>")
+            .arg(link);
+
+
 }
