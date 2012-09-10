@@ -88,7 +88,7 @@ QString MainWindow::makeLink(double lat, double lon)
             .arg(lonsec)
             .arg(ui->west->isChecked() ? "W" : "E")
             .arg(name);
-    return QString::fromUtf8("<sidebar>\n* Что рядом\n** %1 | Смотреть\n</sidebar>")
+    return QString::fromUtf8("<pagesidebar>\n* Что рядом\n** %1 | Смотреть\n</pagesidebar>")
             .arg(link);
 
 
